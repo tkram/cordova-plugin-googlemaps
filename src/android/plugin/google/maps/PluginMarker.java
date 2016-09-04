@@ -158,15 +158,21 @@ public class PluginMarker extends MyPlugin {
 
         @Override
         public void onPostExecute(Object object) {
-          Marker marker = (Marker)object;
+          final Marker marker = (Marker)object;
           if (opts.has("visible")) {
-            try {
-              marker.setVisible(opts.getBoolean("visible"));
-            } catch (JSONException e) {}
+			PluginMarker.this.cordova.getActivity().runOnUiThread(new Runnable() {
+			  @Override
+			  public void run() {
+				  try {
+					marker.setVisible(opts.getBoolean("visible")); 
+				  } catch (JSONException e) {
+					  e.printStackTrace();
+				  }
+			  }
+			});
           } else {
             marker.setVisible(true);
           }
-          
 
           // Animation
           String markerAnimation = null;
